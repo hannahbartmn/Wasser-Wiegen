@@ -1,11 +1,11 @@
 # Grundlagen der Versuchsplanung 
 
 Daten <- data.frame(Proband = c("Lukas Pape", "Serhat Aydin", "Maike Brochtrup", "Justin Pixner",
-                                "Larissa Schöneich", "Mia Macarena Bedarf", "Tobias Hübner", 
+                                "Larissa Schoeneich", "Mia Macarena Bedarf", "Tobias Huebner", 
                                 "Nicole Hofmann", "Simon Kutzner", "Jonas Molsbeck", 
                                 "Julia Nadine Pohl", "Piet Wilhelm Cornils", "Dylan Wagner",
-                                "Max Kübler", "Nils Hülpüsch", "Ashtar Hashmin", 
-                                "Mika Lowak", "Onur Gül"), 
+                                "Max Kuebler", "Nils Huelpuesch", "Ashtar Hashmin", 
+                                "Mika Lowak", "Onur Guel"), 
                     Glas = c("s", "s", "s", "b", "b", "b", "b", "s", "s", "s", "b", 
                              "s", "b", "b", "s", "b", "b", "s"), 
                     Versuchseinheit = c(1,9,2,10,3,11,4,12,5,13,6,14,7,15,8,16,17,18),
@@ -21,7 +21,7 @@ Daten <- data.frame(Proband = c("Lukas Pape", "Serhat Aydin", "Maike Brochtrup",
                     Stress = c(2,1,2,3,2,2,1,3,2,1,4,2,1,1,1,3,2,1), 
                     Kurzsichtig = c(0,1,0,1,0,0,0,1,0,0,1,0,1,1,1,0,0,0), 
                     Weitsichtig = c(0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0), 
-                    Hornhautverkrümmung = c(0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0), 
+                    Hornhautverkruemmung = c(0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0), 
                     Messergebnis = c(193, 198, 184, 212, 191, 225, 225, 210, 172, 198, 
                                       223, 179, 191, 189, 179, 211, 212, 183))
 
