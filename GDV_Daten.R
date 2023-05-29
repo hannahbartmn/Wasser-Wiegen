@@ -1,5 +1,14 @@
 # Grundlagen der Versuchsplanung 
 
+
+
+#
+# Laden der Pakete
+library(ggplot2)
+library(ggpubr)
+
+
+# Erstellung Dataframe
 Daten <- data.frame(Proband = c("Lukas Pape", "Serhat Aydin", "Maike Brochtrup", "Justin Pixner",
                                 "Larissa Schoeneich", "Mia Macarena Bedarf", "Tobias Huebner", 
                                 "Nicole Hofmann", "Simon Kutzner", "Jonas Molsbeck", 
@@ -33,3 +42,54 @@ mean(B)
 mean(S)
 
 
+# Zusammenfassung deskrip. Stat.
+des_stat_B <- summary(B)
+des_stat_S <- summary(S)
+
+
+# ------------------------------------------------------------------------------
+# Betrachtung Normalverteilung
+#
+# Dataframe erstellen
+data <- data.frame(Group = c(rep("B", length(B)), rep("S", length(S))), Value = c(B, S))
+
+# qq-Plot für einzelne Messung
+# Layout fuer drei Unterplots
+par(mfrow = c(1, 2))
+
+qqnorm(B, main = "Q-Q Plot \nBreites Glas", xlab = "Theoretische Quantile", ylab = "Beobachtete Quantile")
+qqline(B)
+
+qqnorm(S, main = "Q-Q Plot \nSchmales Glas", xlab = "Theoretische Quantile", ylab = "Beobachtete Quantile")
+qqline(S)
+
+# Zusammengefasster qq-Plot
+qq_plot <- ggplot(data, aes(sample = Value)) +
+  geom_qq() +
+  geom_qq_line(color = "red") +
+  xlab("Theoretische Quantile") + 
+  ylab("Beobachtete Quantile") +  
+  ggtitle("Q-Q-Plot der Daten")
+theme_bw()
+
+print(qq_plot)
+
+# ------------------------------------------------------------------------------
+# t-Test
+t.test(B,S)
+
+
+# ------------------------------------------------------------------------------
+# Grafische Darstellung
+#
+
+# Violinplot erstellen
+violin_plot <- ggplot(data, aes(x = Group, y = Value, fill = Group)) +
+  geom_violin(scale = "width", trim = TRUE) +
+  geom_boxplot(width = 0.1, fill = "white", color = "black") +
+  #stat_qq(aes(sample = Value), color = "red") +
+  facet_wrap(~ Group, scales = "fixed") +
+  ggtitle("Violinplot der Daten") +
+  theme_bw()
+
+print(violin_plot)
