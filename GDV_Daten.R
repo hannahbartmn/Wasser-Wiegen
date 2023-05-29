@@ -51,7 +51,7 @@ des_stat_S <- summary(S)
 # Betrachtung Normalverteilung
 #
 # Dataframe erstellen
-data <- data.frame(Glas = c(rep("B", length(B)), rep("S", length(S))), Werte = c(B, S))
+data <- data.frame(Glas = c(rep("B", length(B)), rep("S", length(S))), Value = c(B, S))
 
 # qq-Plot für einzelne Messung
 # Layout fuer drei Unterplots
@@ -69,7 +69,7 @@ qq_plot <- ggplot(data, aes(sample = Value)) +
   geom_qq_line(color = "red") +
   xlab("Theoretische Quantile") + 
   ylab("Beobachtete Quantile") +  
-  ggtitle("Q-Q-Plot der Daten")
+  ggtitle("Q-Q-Plot der Daten") +
 theme_bw()
 
 print(qq_plot)
@@ -84,13 +84,14 @@ t.test(B,S)
 #
 
 # Violinplot erstellen
-violin_plot <- ggplot(data, aes(x = Glas, y = Werte, fill = Glas)) +
+violin_plot <- ggplot(data, aes(x = Glas, y = Value, fill = Glas)) +
   geom_violin(scale = "width", trim = TRUE) +
   geom_boxplot(width = 0.1, fill = "white", color = "black") +
   #stat_qq(aes(sample = Value), color = "red") +
   #facet_wrap(~Group, scales = "free") +
   ylim(20, 80) + 
   ylab("Menge in ml") +
+  geom_hline(yintercept = 50, linetype = "dashed", color = "black") +
   ggtitle("Violinplot der Daten") +
   theme_bw()
 
