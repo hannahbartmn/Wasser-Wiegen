@@ -6,6 +6,7 @@
 # Laden der Pakete
 library(ggplot2)
 library(ggpubr)
+library(car)
 
 
 # Erstellung Dataframe
@@ -34,12 +35,14 @@ Daten <- data.frame(Proband = c("Lukas Pape", "Serhat Aydin", "Maike Brochtrup",
                     Messergebnis = c(193, 198, 184, 212, 191, 225, 225, 210, 172, 198, 
                                       223, 179, 191, 189, 179, 211, 212, 183))
 
+
 # Messergebniss ohne Gewicht vom Glas
 B <- Daten$Messergebnis[Daten$Glas == "b"] - 165
 S <- Daten$Messergebnis[Daten$Glas == "s"] - 132
 
 mean(B)
 mean(S)
+
 
 
 # Zusammenfassung deskrip. Stat.
@@ -75,9 +78,6 @@ theme_bw()
 print(qq_plot)
 
 # ------------------------------------------------------------------------------
-# t-Test
-t.test(B,S)
-
 
 # ------------------------------------------------------------------------------
 # Grafische Darstellung
@@ -96,3 +96,103 @@ violin_plot <- ggplot(data, aes(x = Glas, y = Value, fill = Glas)) +
   theme_bw()
 
 print(violin_plot)
+
+
+
+################################################################################################################
+
+
+
+B1 <- abs(B-50)
+S1 <- abs(S-50)
+
+
+summary(B1)
+summary(S1)
+
+# ------------------------------------------------------------------------------
+# Betrachtung Normalverteilung von Teststatistik
+#
+# Dataframe erstellen
+data2 <- data.frame(Glas = c(rep("B", length(B1)), rep("S", length(S1))), Value = c(B1, S1))
+
+# qq-Plot fÃ¼r einzelne Messung
+# Layout fuer drei Unterplots
+par(mfrow = c(1, 2))
+
+qqnorm(B1, main = "Q-Q Plot \nBreites Glas", xlab = "Theoretische Quantile", ylab = "Beobachtete Quantile")
+qqline(B1)
+
+qqnorm(S1, main = "Q-Q Plot \nSchmales Glas", xlab = "Theoretische Quantile", ylab = "Beobachtete Quantile")
+qqline(S1)
+
+# Zusammengefasster qq-Plot
+qq_plot <- ggplot(data2, aes(sample = Value)) +
+  geom_qq() +
+  geom_qq_line(color = "red") +
+  xlab("Theoretische Quantile") + 
+  ylab("Beobachtete Quantile") +  
+  ggtitle("Q-Q-Plot der Daten") +
+  theme_bw()
+
+print(qq_plot)
+
+# ------------------------------------------------------------------------------
+
+# ------------------------------------------------------------------------------
+# Grafische Darstellung
+#
+
+# Violinplot erstellen
+violin_plot <- ggplot(data2, aes(x = Glas, y = Value, fill = Glas)) +
+  geom_violin(scale = "width", trim = TRUE) +
+  geom_boxplot(width = 0.1, fill = "white", color = "black") +
+  #stat_qq(aes(sample = Value), color = "red") +
+  #facet_wrap(~Group, scales = "free") +
+  ylim(0, 30) + 
+  ylab("Abweichung in ml") +
+  geom_hline(yintercept = 50, linetype = "dashed", color = "black") +
+  ggtitle("Violinplot der Daten") +
+  theme_bw()
+
+print(violin_plot)
+
+
+
+par(mfrow = c(1, 1))
+boxplot(Value ~ Glas, data = data2)
+boxplot(data2$Value)
+
+# ------------------------------------------------------------------------------
+
+# Vortest auf Normalverteilung (Kolmogorov-Smirnov-Test und Shapiro-Wilk-Test)
+
+# schmales Glas
+ks_S <- ks.test(S1,"pnorm",mean=mean(S1), sd=sd(S1)) #p-Wert 0.74 => keine Ablehnung der Normalverteilungsannahme 
+sh_S <- shapiro.test(S1)  # p-Wert 0.1684 => keine Ablehnung der Normalverteilungsannahme                                       
+
+#breites Glas
+ks_B <- ks.test(B1,"pnorm",mean=mean(B1), sd=sd(B1)) #p-Wert 0.54 => keine Ablehnung der Normalverteilungsannahme 
+sh_B <- shapiro.test(B1)  # p-Wert 0.0344 => Ablehnung der Normalverteilungsannahme        
+
+
+#-------------------------------------------------------------------------------
+# einseitiger Zwei-Stichproben T-test (für normalverteilte Stichprobe mit gleicher Varianz)
+
+t.test(S1,B1,var.equal = TRUE, alternative = "less") ## p-Wert 0.2916 => kein signifikanter Unterschied
+
+#-------------------------------------------------------------------------------
+# Varianzgleichheit
+
+leveneTest(data2$Value, data2$Glas) # p-Wert von 0.8701 => Varianzgleichheit wird nicht abgelehnt
+
+
+#-------------------------------------------------------------------------------
+#Problem der Normalverteilungsannahme im Intervall (0,50)
+
+#Berechnen der vernachlässigten Fläche
+
+#schmales Glas
+
+Fehler_S <- pnorm(0, mean=mean(S1), sd=sd(S1))+(1-(pnorm(50, mean=mean(S1), sd=sd(S1)))) ## 13% der Verteilung wird nicht berücksichtigt
+Fehler_B <- pnorm(0, mean=mean(B1), sd=sd(B1))+(1-(pnorm(50, mean=mean(B1), sd=sd(B1)))) ## 9%  der Verteilung wird nicht berücksichtigt 
