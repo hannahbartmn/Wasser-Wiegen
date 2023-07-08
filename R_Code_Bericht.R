@@ -1,3 +1,48 @@
+#####
+#Zweiter Versuch
+
+fliegen <- data.frame(matrix(nrow = 16, ncol = 5))
+colnames(fliegen) <- c("weite", "papier", "untergrund", "fingerdruck", "groesse")
+fliegen$papier <- as.factor(rep(rep(c(0,1), each = 4), 2))
+fliegen$untergrund <- as.factor(rep(c(0,1,1,0,1,0,0,1), 2))
+fliegen$fingerdruck <- as.factor(rep(c(0,1), 8))
+fliegen$groesse <- as.factor(rep(rep(c(0,1), each = 2), 4))
+
+#Papier
+#0 duennes Papier, 1 dickes Papier
+#Untergrund
+#0 ohne, 1 mit
+#fingerdruck
+#0 unten, #1 oben 
+#groesse 
+#0 klein, 1 gross
+
+#Einheit in mm 
+fliegen$weite <- c(33, 375, 0, 240, 106, 500, 127, 648, 14, 390, 0, 160, 54, 1179, 179, 514)
+
+#hinterster Punkt wird gemessen 
+#3 Versuche, davon das maximum fuer eine beobachtung
+
+
+# Screening
+limo <- lm(weite ~ papier + untergrund + fingerdruck + groesse, data = fliegen)
+summary(limo)
+
+fliegen2 <- fliegen[fliegen$fingerdruck == 1,]
+limo2 <- lm(weite[fingerdruck == 1] ~ papier + untergrund + groesse, data = fliegen2)
+summary(limo2)
+
+
+
+
+
+
+
+
+
+
+
+
 ################################################################################
 ###### Kapitel 5 Versuchsplanung
 
