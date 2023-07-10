@@ -33,6 +33,28 @@ limo2 <- lm(weite[fingerdruck == 1] ~ papier + untergrund + groesse, data = flie
 summary(limo2)
 
 
+# Optimierung 
+
+G <- rep(c(-1,0,1), each = 9)
+P <- rep(rep(c(-1,0,1), 3), each = 3)
+G_2 <- (rep(c(-1,0,1), each = 9))^2
+P_2 <- (rep(rep(c(-1,0,1), 3), each = 3))^2
+
+#in mm, ein Frosch drei Mal (drei Wdhl.), eine Person flippt
+y <- c(367,322,268,
+       477,642,448,
+       575,454,1128,
+       237,275,212,
+       541,540,604,
+       108,499,868,
+       186,161,128,
+       3,0,43,
+       1024,168,614)
+
+limo_op <- lm(y ~ G + P + G_2 + P_2 + G:P)
+summary(limo_op)
+
+
 
 
 
